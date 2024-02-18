@@ -8,7 +8,7 @@ on:
 
 jobs:
   laravel-tests:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     strategy:
       fail-fast: true
@@ -32,10 +32,10 @@ jobs:
           composer create-project laravel/laravel:^${{ matrix.laravel }} .
           composer require laravel/breeze:@dev --no-interaction --no-update
           composer config repositories.breeze '{"type": "path", "url": "breeze"}' --file composer.json
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          path: 'breeze'
+      # - name: Checkout code
+      #   uses: actions/checkout@v4
+      #   with:
+      #     path: 'breeze'
 
       - name: Install Breeze
         run: |
@@ -47,6 +47,8 @@ jobs:
       - name: Compile assets
         run: npm run build
 
+      - name: Install Composer Dependencies
+        run: composer install
       - name: Generate key
         run: php artisan key:generate
       - name: Directory Permissions
