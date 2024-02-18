@@ -15,11 +15,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+Route::get('/', function () {
+    return view('welcome');
+});
 
-Route::resource('products', ProductController::class)->middleware(['auth', 'verified']);
+// Route::resource('products', ProductController::class)->middleware(['auth', 'verified']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
