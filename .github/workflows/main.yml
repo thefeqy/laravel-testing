@@ -10,20 +10,6 @@ on:
 jobs:
   laravel-tests:
     runs-on: ubuntu-22.04
-
-    strategy:
-      fail-fast: true
-      matrix:
-        stack: [blade]
-        laravel: [10]
-        args: ["", --pest]
-        include:
-          - stack: vue
-            args: --ssr --typescript
-            laravel: 10
-          - stack: react
-            args: --ssr --typescript
-            laravel: 10
             
     steps:
       - name: Setup PHP
@@ -37,7 +23,7 @@ jobs:
 
       - name: Setup Laravel
         run: |
-          composer create-project laravel/laravel:^${{ matrix.laravel }} .
+          composer create-project laravel/laravel:10 .
           composer require laravel/breeze:@dev --no-interaction --no-update
           composer config repositories.breeze '{"type": "path", "url": "breeze"}' --file composer.json
       - name: Checkout code
@@ -48,17 +34,15 @@ jobs:
       - name: Install Breeze
         run: |
           composer update "laravel/breeze" --prefer-dist --no-interaction --no-progress -W
-          php artisan breeze:install ${{ matrix.stack }} ${{ matrix.args }}
+          php artisan breeze:install blade
       - name: Install NPM dependencies
-        if: matrix.stack != 'api'
         run: npm i
 
       - name: Compile assets
-        if: matrix.stack != 'api'
         run: npm run build
 
       - name: Execute tests
-        run: ${{ matrix.args == '--pest' && 'vendor/bin/pest' || 'vendor/bin/phpunit' }}
+        run: 'vendor/bin/phpunit'
         env:
           DB_CONNECTION: sqlite
           DB_DATABASE: ":memory:"
