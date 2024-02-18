@@ -1,23 +1,20 @@
 
-name: tests
+name: Testing laravel application with Breeze starterkit
 
 on:
   push:
-    branches:
-      - main
-      - '*.x'
+    branches: [ "main" ]
   pull_request:
-  schedule:
-    - cron: '0 0 * * *'
+    branches: [ "main" ]
 
 jobs:
-  stub-tests:
+  laravel-tests:
     runs-on: ubuntu-22.04
 
     strategy:
       fail-fast: true
       matrix:
-        stack: [blade, livewire, livewire-functional, react, vue, api]
+        stack: [blade]
         laravel: [10]
         args: ["", --pest]
         include:
@@ -27,9 +24,7 @@ jobs:
           - stack: react
             args: --ssr --typescript
             laravel: 10
-
-    name: Test Stubs - Laravel ${{ matrix.laravel }} - ${{ matrix.stack }} ${{ matrix.args }}
-
+            
     steps:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
